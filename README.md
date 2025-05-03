@@ -1,6 +1,8 @@
-# Regional AI Video Translator
+# Regional AI Video Translator (LokVaani)
 
 A full-stack application to translate videos into multiple Indian languages using AI. The app allows users to upload a video, automatically transcribes and translates the audio, and provides a downloadable translated video with captions. Built with React (frontend), Node.js/Express (backend), and Docker for easy deployment.
+
+![LokVaani Main Interface](https://res.cloudinary.com/rahul9307/image/upload/v1/regional-ai/screenshots/main_interface.png)
 
 ---
 
@@ -15,23 +17,35 @@ A full-stack application to translate videos into multiple Indian languages usin
 ---
 
 ## Tech Stack
-- **Frontend:** React, Vite, Tailwind CSS
+- **Frontend:** React, Vite, Tailwind CSS, Shadcn UI
 - **Backend:** Node.js, Express
 - **AI Services:** Google Gemini, Sarvam AI
-- **Storage:** Cloudinary
+- **Storage:** Cloudinary (organized in dedicated folders)
 - **Containerization:** Docker, Docker Compose
+
+---
+
+## Screenshots
+
+### Translation Interface
+![Translation Interface](https://res.cloudinary.com/rahul9307/image/upload/v1/regional-ai/screenshots/translation_interface.png)
+
+### Results View
+![Results View](https://res.cloudinary.com/rahul9307/image/upload/v1/regional-ai/screenshots/results_view.png)
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
-- [Docker](https://docs.docker.com/get-docker/) & [Docker Compose](https://docs.docker.com/compose/)
+Choose one of the following setups:
+- **Localhost:** [Node.js](https://nodejs.org/) (v18+), [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- **Docker:** [Docker](https://docs.docker.com/get-docker/) & [Docker Compose](https://docs.docker.com/compose/)
 
 ### 1. Clone the Repository
 ```sh
-git clone <your-repo-url>
-cd Regional-AI
+git clone https://github.com/RahulJha93/LokVaani.git
+cd LokVaani
 ```
 
 ### 2. Environment Variables
@@ -52,7 +66,33 @@ SARVAM_TTS_ENDPOINT=https://api.sarvam.ai/text-to-speech
 VITE_BACKEND_URL=http://localhost:5000
 ```
 
-### 3. Build and Run with Docker Compose
+---
+
+## Running the App
+
+### Option 1: Localhost (Recommended for Development)
+
+#### 1. Start the Backend
+```sh
+cd backend
+npm install
+npm run dev
+```
+The backend will run at [http://localhost:5000](http://localhost:5000)
+
+#### 2. Start the Frontend
+Open a new terminal and run:
+```sh
+cd frontend
+npm install
+npm run dev
+```
+The frontend will run at [http://localhost:5173](http://localhost:5173)
+
+---
+
+### Option 2: Docker Compose
+
 ```sh
 docker-compose up --build
 ```
