@@ -2,7 +2,7 @@
 
 A full-stack application to translate videos into multiple Indian languages using AI. The app allows users to upload a video, automatically transcribes and translates the audio, and provides a downloadable translated video with captions. Built with React (frontend), Node.js/Express (backend), and Docker for easy deployment.
 
-![LokVaani Main Interface](https://res.cloudinary.com/rahul9307/image/upload/v1/regional-ai/screenshots/main_interface.png)
+![LokVaani Main Interface](https://res.cloudinary.com/rahul9307/image/upload/v1746301680/Screenshot_2025-05-04_011633_tct0ou.png)
 
 ---
 
@@ -28,10 +28,10 @@ A full-stack application to translate videos into multiple Indian languages usin
 ## Screenshots
 
 ### Translation Interface
-![Translation Interface](https://res.cloudinary.com/rahul9307/image/upload/v1/regional-ai/screenshots/translation_interface.png)
+![Translation Interface](https://res.cloudinary.com/rahul9307/image/upload/v1746301680/Screenshot_2025-05-04_011658_gxmwew.png)
 
 ### Results View
-![Results View](https://res.cloudinary.com/rahul9307/image/upload/v1/regional-ai/screenshots/results_view.png)
+![Results View](https://res.cloudinary.com/rahul9307/image/upload/v1746301927/Screenshot_2025-05-04_012146_t06vz5.png)
 
 ---
 
