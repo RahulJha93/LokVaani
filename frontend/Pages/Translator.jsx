@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Dialog } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Upload,
@@ -52,7 +53,8 @@ const languages = [
   { code: "Odia", name: "Odia" },
   { code: "Punjabi", name: "Punjabi" },
   { code: "Tamil", name: "Tamil" },
-  { code: "Telugu", name: "Telugu" }
+  { code: "Telugu", name: "Telugu" },
+  { code: "English", name: "English" }
 ];
 
 const bulbul = [
@@ -66,7 +68,9 @@ const bulbul = [
 
 
 const Translator = () => {
+  const [maintenanceOpen, setMaintenanceOpen] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState(null); // local preview
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [selectedVoice, setSelectedVoice] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -83,6 +87,7 @@ const Translator = () => {
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
+      setUploadedVideoUrl(URL.createObjectURL(e.target.files[0]));
       setResult({ videoUrl: null, transcription: null, captions: null });
     }
   };
@@ -95,6 +100,7 @@ const Translator = () => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       setSelectedFile(e.dataTransfer.files[0]);
+      setUploadedVideoUrl(URL.createObjectURL(e.dataTransfer.files[0]));
       setResult({ videoUrl: null, transcription: null, captions: null });
     }
   };
@@ -115,6 +121,7 @@ const Translator = () => {
       const formData = new FormData();
       formData.append('video', selectedFile);
       formData.append('language', selectedLanguage);
+      formData.append('speaker', selectedVoice);
 
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/upload/`, {
         method: 'POST',
@@ -188,7 +195,21 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
   };
 
   return (
-    <section id="translator" className="py-20">
+    <>
+      <Dialog
+        open={maintenanceOpen}
+        onClose={() => setMaintenanceOpen(false)}
+        title="Scheduled Maintenance"
+      >
+        <p className="text-gray-700 mb-2">
+          Our website is temporarily unavailable due to scheduled maintenance for infrastructure upgrades and service improvements.
+        </p>
+        <p className="text-gray-700">
+          We expect to be back online by <b>Monday, 26/05/2025 at 5:00pm</b>.<br />
+          We apologize for the inconvenience and appreciate your patience.
+        </p>
+      </Dialog>
+      <section id="translator" className="py-20">
       <style>{gradientAnimationStyle}</style>
       <div className="container px-4 md:px-6">
         <div className="text-center space-y-4 mb-12">
@@ -211,7 +232,27 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {!result.videoUrl ? (
+                {(!result.videoUrl && selectedFile && uploadedVideoUrl) ? (
+                  <div className="space-y-4">
+                    <div className="aspect-video rounded-lg overflow-hidden border border-purple-500/20 bg-black/50">
+                      <video ref={videoRef} src={uploadedVideoUrl} controls className="w-full h-full" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-purple-400/50 text-purple-200 hover:bg-purple-600/30 hover:text-purple-100 transition-colors"
+                        onClick={() => {
+                          setSelectedFile(null);
+                          setUploadedVideoUrl(null);
+                          setResult({ videoUrl: null, transcription: null, captions: null });
+                        }}
+                      >
+                        Change Video
+                      </Button>
+                    </div>
+                  </div>
+                ) : (!result.videoUrl ? (
                   <div
                     className="border-2 border-dashed border-purple-500/30 rounded-lg p-10 text-center cursor-pointer hover:bg-purple-950/30 transition-colors"
                     onClick={() => fileInputRef.current?.click()}
@@ -245,51 +286,38 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {result.videoUrl ? (
-                      <div className="aspect-video rounded-lg overflow-hidden border border-purple-500/20 bg-black/50">
-                        <video ref={videoRef} src={result.videoUrl} controls className="w-full h-full" />
-                      </div>
-                    ) : (
-                      <div className="aspect-video rounded-lg overflow-hidden border border-purple-500/20 bg-black/50 flex items-center justify-center">
-                        <div className="text-center">
-                          <p className="font-medium text-purple-200">{selectedFile?.name}</p>
-                          <p className="text-sm text-purple-300">
-                            {selectedFile?.size ? (selectedFile.size / (1024 * 1024)).toFixed(2) : 0} MB
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
+                    <div className="aspect-video rounded-lg overflow-hidden border border-purple-500/20 bg-black/50">
+                      <video ref={videoRef} src={result.videoUrl} controls className="w-full h-full" />
+                    </div>
                     <div className="flex items-center justify-between">
                       <Button
                         variant="outline"
                         size="sm"
                         className="border-purple-400/50 text-purple-200 hover:bg-purple-600/30 hover:text-purple-100 transition-colors"
                         onClick={() => {
-                          setSelectedFile(null)
-                          setResult({ videoUrl: null, transcription: null, captions: null })
+                          setSelectedFile(null);
+                          setUploadedVideoUrl(null);
+                          setResult({ videoUrl: null, transcription: null, captions: null });
                         }}
                       >
                         Change Video
                       </Button>
-                      {result.videoUrl && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-purple-400/50 text-purple-200 hover:bg-purple-600/30 hover:text-purple-100 transition-colors"
-                          onClick={() => {
-                            if (videoRef.current) {
-                              videoRef.current.currentTime = 0
-                              videoRef.current.play()
-                            }
-                          }}
-                        >
-                          <Play className="h-4 w-4 mr-2" /> Play
-                        </Button>
-                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-purple-400/50 text-purple-200 hover:bg-purple-600/30 hover:text-purple-100 transition-colors"
+                        onClick={() => {
+                          if (videoRef.current) {
+                            videoRef.current.currentTime = 0;
+                            videoRef.current.play();
+                          }
+                        }}
+                      >
+                        <Play className="h-4 w-4 mr-2" /> Play
+                      </Button>
                     </div>
                   </div>
-                )}
+                ))}
                 {!result.videoUrl && (
                 <div className="space-y-2">
                   <Label htmlFor="language" className="text-purple-200">
@@ -350,15 +378,17 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
                       <span>Processing video...</span>
                       <span>{progress}%</span>
                     </div>
-                    <Progress
-                      value={progress}
-                      className="h-2 [&_[role=progressbar]]:bg-gradient-to-r [&_[role=progressbar]]:from-purple-500 [&_[role=progressbar]]:to-pink-500"
-                    />
+                    {/* shadcn/ui Progress bar */}
+                    <div className="w-full">
+                      <Progress value={progress} className="h-4 bg-purple-950/50 border border-purple-700/40" />
+                    </div>
                     <p className="text-xs text-purple-300 text-center mt-2">
                       This may take a few minutes depending on the video length
                     </p>
                   </div>
                 )}
+                {/* Always show progress bar during processing */}
+                {/* Already handled above, so no further changes needed for progress bar */}
 
                 {result.transcription && (
                   <div className="space-y-2">
@@ -436,25 +466,20 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
                         }
                       }}
                     >
-                      <Download className="h-4 w-4 mr-2" /> Download Video
+                      <Languages className="h-4 w-4 mr-2" /> Open Video
                     </Button>
                   </>
                 ) : (
-                  <Button
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white transition-colors"
-                    onClick={handleTranslate}
-                    disabled={!selectedFile || !selectedLanguage || isProcessing}
-                  >
-                    {isProcessing ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Processing
-                      </>
-                    ) : (
-                      <>
-                        <Languages className="h-4 w-4 mr-2" /> Translate Video
-                      </>
-                    )}
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      className="border-purple-400/50 text-purple-200 hover:bg-purple-600/30 hover:text-purple-100 transition-colors"
+                      onClick={handleTranslate}
+                      disabled={isProcessing || !selectedFile}
+                    >
+                      <Languages className="h-4 w-4 mr-2" /> Translate Video
+                    </Button>
+                  </>
                 )}
               </div>
             </CardFooter>
@@ -462,7 +487,8 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
         </div>
       </div>
     </section>
+    </>
   );
 };
-
+  
 export default Translator;

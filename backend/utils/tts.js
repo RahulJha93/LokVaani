@@ -1,3 +1,4 @@
+require('dotenv').config();
 const axios = require("axios");
 const fs = require("fs");
 const util = require("util");
@@ -11,21 +12,27 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 console.log("TTS module - FFmpeg path:", ffmpegPath);
 console.log("TTS module - FFprobe path:", ffprobePath);
-
+  
 // Sarvam AI API configuration
-const SARVAM_API_KEY = process.env.SARVAM_API_KEY ;
+const SARVAM_API_KEY = process.env.SARVAM_API_KEY;
 const SARVAM_TTS_ENDPOINT = process.env.SARVAM_TTS_ENDPOINT;
 
 // Language mapping for Sarvam AI
 const languageModelMap = {
-  "hi-IN": "hi-IN",
-  "mr-IN": "mr-IN",
-  "ta-IN": "ta-IN",
-  "gu-IN": "gu-IN",
-  // Add more language mappings as needed
+  "hi-IN": "hi-IN", //hindi
+  "mr-IN": "mr-IN", //marathi
+  "ta-IN": "ta-IN", //tamil
+  "gu-IN": "gu-IN", //gujarati
+  "bn-IN": "bn-IN", //bengali
+  "te-IN": "te-IN", //telugu
+  "ml-IN": "ml-IN", //malayalam
+  "kn-IN": "kn-IN", //kannada
+  "or-IN": "or-IN", //odia
+  "pa-IN": "pa-IN", //punjabi
+  "ml-IN": "ml-IN", //malayalam
 };
 
-const generateVoice = async (text, languageCode = "hi-IN", outputPath, originalAudioPath = null, originalDuration = null) => {
+const generateVoice = async (text, languageCode = "hi-IN", outputPath, originalAudioPath = null, originalDuration = null, speaker = "meera") => {
   try {
     console.log(`Generating voice for language: ${languageCode}`);
     
@@ -144,7 +151,7 @@ const generateVoice = async (text, languageCode = "hi-IN", outputPath, originalA
           'api-subscription-key': SARVAM_API_KEY
         },
         data: {
-          speaker: "meera",
+          speaker: speaker,
           pitch: 0,
           pace: 1,
           loudness: 1,

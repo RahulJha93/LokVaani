@@ -34,6 +34,7 @@ const transcribeAudio = require("../utils/transcribe.js");
 const generateTranslatedScript = require("../utils/gemini.js");
 const generateVoice = require("../utils/tts.js");
 
+
 console.log("FFmpeg path:", ffmpegPath);
 console.log("FFprobe path:", ffprobePath);
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -44,7 +45,13 @@ const languageMap = {
   Marathi: "mr-IN",
   Tamil: "ta-IN",
   Gujarati: "gu-IN",
-  Maithili: null, // fallback
+  Bengali: "bn-IN",
+  Telugu: "te-IN",
+  Malayalam: "ml-IN",
+  Kannada: "kn-IN",
+  Odia: "or-IN",
+  Punjabi: "pa-IN",
+  English: "en-IN",
 };
 
 // Ensure outputs directory exists
@@ -123,6 +130,9 @@ exports.handleUpload = async (req, res) => {
 
           console.log("Generating translated script...");
           const translatedScript = await generateTranslatedScript(transcript, language, "script");
+
+    // Get speaker from request
+    const speaker = req.body.speaker || "meera"; // fallback to meera if not provided
           console.log("Translation result:", translatedScript);
 
           console.log("Generating caption...");
@@ -142,11 +152,7 @@ exports.handleUpload = async (req, res) => {
             voiceText = voiceText.replace(/\b[a-zA-Z0-9]+\b/g, '');
             voiceText = voiceText.replace(/\*\*([^*]+)\*\*/g, '$1');
 
-            voicePath = path.resolve(path.join(outputsDir, `${Date.now()}_voice.mp3`));
-            console.log("Generating voice at:", voicePath);
-            console.log("Using cleaned text for voice generation:", voiceText);
-
-            await generateVoice(voiceText, langCode, voicePath, audioOutputPath, originalAudioDuration);
+            voicePath = await generateVoice(translatedScript, langCode, audioOutputPath, audioOutputPath, originalAudioDuration, speaker);
             console.log("Voice generation completed");
             
             // Upload converted audio to Cloudinary
