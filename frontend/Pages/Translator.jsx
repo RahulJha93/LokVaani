@@ -205,7 +205,7 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
           Our website is temporarily unavailable due to scheduled maintenance for infrastructure upgrades and service improvements.
         </p>
         <p className="text-gray-700">
-          We expect to be back online by <b>Monday, 26/05/2025 at 5:00pm</b>.<br />
+          We expect to be back online by <b>Monday, 09/06/2025 at 5:00pm</b>.<br />
           We apologize for the inconvenience and appreciate your patience.
         </p>
       </Dialog>
