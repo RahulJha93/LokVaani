@@ -7,6 +7,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint
+app.get('/server', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+
 app.use("/api/upload", uploadRoute);
 
 const PORT = 5000;
