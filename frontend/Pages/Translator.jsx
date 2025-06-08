@@ -196,19 +196,6 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
 
   return (
     <>
-      <Dialog
-        open={maintenanceOpen}
-        onClose={() => setMaintenanceOpen(false)}
-        title="Scheduled Maintenance"
-      >
-        <p className="text-gray-700 mb-2">
-          Our website is temporarily unavailable due to scheduled maintenance for infrastructure upgrades and service improvements.
-        </p>
-        <p className="text-gray-700">
-          We expect to be back online by <b>Monday, 26/05/2025 at 5:00pm</b>.<br />
-          We apologize for the inconvenience and appreciate your patience.
-        </p>
-      </Dialog>
       <section id="translator" className="py-20">
       <style>{gradientAnimationStyle}</style>
       <div className="container px-4 md:px-6">
