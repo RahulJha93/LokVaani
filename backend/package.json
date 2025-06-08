@@ -4,7 +4,8 @@
   "description": "ai regional",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npm rebuild @ffprobe-installer/ffprobe"
   },
   "author": "rahul jha",
   "license": "ISC",
